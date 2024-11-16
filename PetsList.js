@@ -7,15 +7,28 @@ import SetType from "./SetType";
 function PetsList() {
   const [query, setQuery] = useState("");
   const [type, setType] = useState("");
+  const [removePets, setRemovePets] = useState(pets);
 
-  const filteredByName = pets.filter((pet) => pet.name.includes(query));
+  const filteredByName = removePets.filter((pet) => pet.name.includes(query));
   const filteredByType = filteredByName.filter((pet) =>
     pet.type.includes(type)
   );
-  const petList = filteredByType.map((pet) => (
-    <PetItem pet={pet} key={pet.id} />
-  ));
 
+  const handleClick = (petId) => {
+    const confirmAdoption = window.confirm(
+      "Are you sure you want to adopt this pet?"
+    );
+    if (confirmAdoption) {
+      const petList = removePets.filter((pet) => pet.id !== petId);
+      setRemovePets(petList);
+      alert("Thank you for adopting!");
+    } else {
+      alert("Adoption canceled.");
+    }
+  };
+  const petList = filteredByType.map((pet) => (
+    <PetItem handleClickAdopt={handleClick} pet={pet} key={pet.id} />
+  ));
   return (
     <section id="doctors" className="doctor-section pt-140">
       <div className="container">
